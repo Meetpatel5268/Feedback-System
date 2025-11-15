@@ -8,9 +8,10 @@ const feedbackSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
     trim: true,
-    lowercase: true
+    lowercase: true,
+    required: false,
+    default: ""
   },
   message: {
     type: String,
@@ -30,4 +31,3 @@ const feedbackSchema = new mongoose.Schema({
 });
 
 export default mongoose.model('Feedback', feedbackSchema);
-
