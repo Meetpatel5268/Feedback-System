@@ -1,180 +1,204 @@
-# Feedback Management Dashboard
+**📌 Feedback Management Dashboard — Full Stack (React + Node + Mongo + JWT)**
 
-A full-stack feedback management system built with React (Vite), Node.js, Express, and MongoDB.
+A production-ready **Feedback Management System** where users submit feedback and **admins** manage analytics, view all feedback, and create new admin accounts.
+Built with **React (Vite) + Tailwind**, **Node.js + Express**, **MongoDB**, and **JWT authentication**.
 
-## Features
+---
 
-- ✅ Submit feedback with name, email, message, and rating (1-5)
-- ✅ Admin dashboard with statistics (total, average rating, positive/negative counts)
-- ✅ View all feedback in a sortable, filterable table
-- ✅ Search and filter feedback by rating
-- ✅ Export feedback to CSV
-- ✅ JWT-based authentication for admin access
-- ✅ Responsive design with Tailwind CSS
+## 🚀 **Features**
 
-## Tech Stack
+### **Public**
 
-### Backend
-- Node.js + Express
-- MongoDB + Mongoose
-- JWT Authentication
-- CORS enabled
+* Submit feedback with:
+
+  * Name
+  * Email
+  * Message
+  * Rating (1–5)
+* Instant success/error response
+
+### **Admin (Protected)**
+
+* JWT Login
+* View all feedback entries
+* Analytics dashboard:
+
+  * Total feedbacks
+  * Average rating
+  * Positive (≥4) feedback count
+  * Negative (≤2) feedback count
+* Create new admin accounts
+* Secure protected routes
+* Logout handling
+* Optional:
+
+  * Search/filter feedback
+  * Export CSV
+
+---
+
+## 🧩 **Tech Stack**
 
 ### Frontend
-- React 18 with Vite
-- React Router
-- Axios for API calls
-- Tailwind CSS
-- React Hot Toast for notifications
 
-## Project Structure
+* React (Vite)
+* Tailwind CSS
+* Axios
+* React Router
+* JWT stored in localStorage
+
+### Backend
+
+* Node.js + Express
+* MongoDB + Mongoose
+* JWT Authentication
+* bcrypt for password hashing
+* CORS
+
+---
+
+## 📁 **Project Structure**
 
 ```
-.
+root/
+│
 ├── backend/
-│   ├── index.js           # Main server file
 │   ├── models/
-│   │   └── Feedback.js    # Feedback model
+│   │   ├── Feedback.js
+│   │   └── Admin.js
 │   ├── routes/
-│   │   ├── feedback.js    # Feedback routes
-│   │   └── auth.js        # Auth routes
+│   │   ├── auth.js
+│   │   ├── admin.js
+│   │   └── feedback.js
 │   ├── middleware/
-│   │   └── auth.js        # JWT verification middleware
-│   ├── .env               # Environment variables
-│   └── package.json
+│   │   └── auth.js
+│   ├── index.js
+│   └── .env
 │
 └── frontend/
     ├── src/
     │   ├── pages/
-    │   │   ├── FeedbackForm.jsx
     │   │   ├── Login.jsx
+    │   │   ├── FeedbackForm.jsx
     │   │   └── Dashboard.jsx
     │   ├── components/
-    │   │   ├── Navbar.jsx
+    │   │   ├── FeedbackTable.jsx
     │   │   ├── StatCard.jsx
-    │   │   └── FeedbackTable.jsx
+    │   │   └── Navbar.jsx
     │   ├── api/
-    │   │   └── axios.js   # Axios configuration
+    │   │   └── axios.js
     │   ├── App.jsx
-    │   ├── main.jsx
-    │   └── index.css
-    ├── .env               # Environment variables
-    └── package.json
+    │   └── main.jsx
+    └── .env
 ```
 
-## Setup Instructions
+---
 
-### Prerequisites
-- Node.js (v16 or higher)
-- MongoDB (local or MongoDB Atlas)
-- npm or yarn
+## 🔌 **API Endpoints**
 
-### Backend Setup
+### **Authentication**
 
-1. Navigate to backend directory:
-```bash
+#### `POST /api/auth/login`
+
+Admin login → returns JWT
+Request:
+
+```
+{
+  "email": "",
+  "password": ""
+}
+```
+
+---
+
+### **Admin Management**
+
+#### `POST /api/admin/create` *(Admin only)*
+
+Create a new admin account.
+Requires valid JWT.
+
+```
+{
+  "email": "",
+  "password": ""
+}
+```
+
+---
+
+### **Feedback**
+
+#### `POST /api/feedback`
+
+Public feedback submission
+Body:
+
+```
+{
+  "name": "",
+  "email": "",
+  "message": "",
+  "rating": 1-5
+}
+```
+
+#### `GET /api/feedback` *(Admin only)*
+
+Returns all feedbacks sorted by date.
+
+---
+
+### **Analytics**
+
+#### `GET /api/stats` *(Admin only)*
+
+Returns:
+
+```
+{
+  "totalFeedbacks": 0,
+  "avgRating": 0,
+  "positiveCount": 0,
+  "negativeCount": 0
+}
+```
+
+---
+
+## 🛠 **Environment Variables**
+
+### Backend → `.env`
+
+```
+PORT=5000
+MONGO_URI=your_mongo_connection_string
+JWT_SECRET=your_secret_key
+```
+
+### Frontend → `.env`
+
+```
+VITE_API_URL=https://your-backend-url.com
+```
+
+---
+
+## 🧪 **Run Locally**
+
+### **Backend**
+
+```
 cd backend
-```
-
-2. Install dependencies:
-```bash
 npm install
-```
-
-3. Configure environment variables:
-   - Copy `.env.example` to `.env` if needed
-   - Update `MONGO_URI` with your MongoDB connection string
-   - Update `JWT_SECRET` with a secure random string
-
-4. Start the server:
-```bash
 npm start
 ```
 
-The backend will run on `http://localhost:5000`
+### **Frontend**
 
-### Frontend Setup
-
-1. Navigate to frontend directory:
-```bash
+```
 cd frontend
-```
-
-2. Install dependencies:
-```bash
 npm install
-```
-
-3. Configure environment variables:
-   - Update `VITE_API_URL` in `.env` to point to your backend URL
-   - Default: `http://localhost:5000`
-
-4. Start the development server:
-```bash
 npm run dev
 ```
-
-The frontend will run on `http://localhost:5173` (or another port if 5173 is busy)
-
-## API Endpoints
-
-### Public Endpoints
-
-- `POST /api/feedback` - Submit feedback
-  - Body: `{ name, email, message, rating }`
-
-### Protected Endpoints (Require JWT)
-
-- `GET /api/feedback` - Get all feedback (latest first)
-- `GET /api/feedback/stats` - Get statistics
-  - Returns: `{ totalFeedbacks, avgRating, positiveCount, negativeCount }`
-
-### Authentication
-
-- `POST /api/auth/login` - Admin login
-  - Body: `{ email, password }`
-  - Returns: `{ token, user }`
-
-**Default Admin Credentials:**
-- Email: `admin@feedback.com`
-- Password: `admin123`
-
-## Deployment
-
-### Backend (Render)
-
-1. Create a new Web Service on Render
-2. Connect your repository
-3. Add environment variables:
-   - `MONGO_URI` - Your MongoDB connection string
-   - `JWT_SECRET` - A secure random string
-   - `PORT` - (Optional, Render provides this)
-4. Build command: `cd backend && npm install`
-5. Start command: `cd backend && npm start`
-
-### Frontend (Vercel)
-
-1. Create a new project on Vercel
-2. Connect your repository
-3. Set root directory to `frontend`
-4. Add environment variable:
-   - `VITE_API_URL` - Your backend URL (e.g., `https://your-backend.onrender.com`)
-5. Build command: `npm run build`
-6. Deploy
-
-## Usage
-
-1. **Submit Feedback**: Visit the homepage and fill out the feedback form
-2. **View Dashboard**: Login with admin credentials to access the dashboard
-3. **Manage Feedback**: View, search, filter, and export feedback from the dashboard
-
-## Development
-
-- Backend runs in development mode with auto-reload
-- Frontend uses Vite HMR for fast development
-- Both projects support hot reloading
-
-## License
-
-ISC
-
