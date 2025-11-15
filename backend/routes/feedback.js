@@ -14,11 +14,17 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ message: 'Name is required' });
     }
 
+    if (!email || !email.trim()) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+    
+
     if (!message || !message.trim()) {
       return res.status(400).json({ message: 'Message is required' });
     }
 
-    if (!rating || rating < 1 || rating > 5) {
+    if (rating === undefined || rating < 1 || rating > 5) {
+
       return res.status(400).json({ message: 'Rating must be between 1 and 5' });
     }
 
